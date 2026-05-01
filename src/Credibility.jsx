@@ -1,9 +1,9 @@
 import React from 'react'
-import { useCounter, useReveal } from './lib'
+import { useWaitlistCount, useReveal } from './lib'
 
 // Block 4 — Credibility (one line)
-export default function Credibility({ tweaks }) {
-  const count = useCounter({ start: 247, speedSec: tweaks.counterSpeed });
+export default function Credibility({ tweaks, responseCount }) {
+  const count = useWaitlistCount(responseCount);
   const ref = useReveal();
   return (
     <section ref={ref.ref} data-screen-label="06 Credibility" className="editorial editorial-bg" style={{

@@ -1,11 +1,12 @@
 import React from 'react'
-import { useDhakaTime, useCounter } from './lib'
+import { useDhakaTime, useWaitlistCount } from './lib'
+
 import { Mark } from './Hero'
 
 // Block 6 — editorial footer
-export default function Footer({ tweaks }) {
+export default function Footer({ tweaks, responseCount }) {
   const { full } = useDhakaTime();
-  const count = useCounter({ start: 247, speedSec: tweaks.counterSpeed });
+  const count = useWaitlistCount(responseCount);
   return (
     <footer className="editorial" data-screen-label="08 Footer" style={{
       position: 'relative', borderTop: '1px solid var(--rule)',

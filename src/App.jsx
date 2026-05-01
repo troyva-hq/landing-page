@@ -6,6 +6,7 @@ import Pillars from './Pillars'
 import Credibility from './Credibility'
 import Conversion from './Conversion'
 import Footer from './Footer'
+import { getResponseCount } from './formbricks'
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "cinematicBase": "obsidian",
@@ -41,6 +42,13 @@ const BODY_MAP = {
 
 export default function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [responseCount, setResponseCount] = React.useState(null);
+
+  const fetchCount = React.useCallback(() => {
+    getResponseCount().then((n) => { if (n !== null) setResponseCount(n); });
+  }, []);
+
+  React.useEffect(() => { fetchCount(); }, [fetchCount]);
 
   // Apply tweaks to CSS variables
   React.useEffect(() => {
@@ -64,9 +72,9 @@ export default function App() {
       <div className="seam" />
       <ValueProp />
       <Pillars tweaks={t} />
-      <Credibility tweaks={t} />
-      <Conversion tweaks={t} />
-      <Footer tweaks={t} />
+      <Credibility tweaks={t} responseCount={responseCount} />
+      <Conversion tweaks={t} onSubmitSuccess={() => { setResponseCount((n) => (n ?? 0) + 1); fetchCount(); }} />
+      <Footer tweaks={t} responseCount={responseCount} />
 
       <TweaksPanel title="Troyva · Tweaks">
         <TweakSection label="Atmosphere" />

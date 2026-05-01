@@ -27,6 +27,13 @@ export function useCounter({ start = 247, speedSec = 18, enabled = true }) {
   return n;
 }
 
+const WAITLIST_OFFSET = 250;
+
+// count prop = Formbricks response count fetched in App; falls back to offset
+export function useWaitlistCount(count) {
+  return count !== null && count !== undefined ? count + WAITLIST_OFFSET : WAITLIST_OFFSET;
+}
+
 export function useReveal(threshold = 0.25) {
   const ref = React.useRef(null);
   const [visible, setVisible] = React.useState(false);

@@ -1,15 +1,17 @@
 import React from 'react'
 import { useReveal } from './lib'
 import { Arrow } from './Hero'
+import { submitEmail } from './formbricks'
 
 // Block 5 — Conversion
-export default function Conversion({ tweaks }) {
+export default function Conversion({ tweaks, onSubmitSuccess }) {
   const ref = useReveal();
   const [email, setEmail] = React.useState('');
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     const v = email.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
@@ -17,7 +19,16 @@ export default function Conversion({ tweaks }) {
       return;
     }
     setError('');
-    setSubmitted(true);
+    setLoading(true);
+    try {
+      await submitEmail(v);
+      setSubmitted(true);
+      onSubmitSuccess?.();
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,15 +76,15 @@ export default function Conversion({ tweaks }) {
                   padding: '10px 0',
                 }}
               />
-              <button type="submit" aria-label="Request Access" style={{
+              <button type="submit" aria-label="Request Access" disabled={loading} style={{
                 background: 'linear-gradient(180deg, #C73A45 0%, #9C2832 100%)',
                 width: 44, height: 44, borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '1px solid rgba(255,180,170,.3)', cursor: 'pointer',
-                color: '#FFF1E8',
+                border: '1px solid rgba(255,180,170,.3)', cursor: loading ? 'wait' : 'pointer',
+                color: '#FFF1E8', opacity: loading ? 0.7 : 1,
                 boxShadow: '0 8px 24px rgba(184,51,61,.4), inset 0 1px 1px rgba(255,255,255,.25)',
                 transition: 'transform .25s ease',
-              }} onMouseEnter={(e)=>e.currentTarget.style.transform='scale(1.06)'}
+              }} onMouseEnter={(e)=>{ if (!loading) e.currentTarget.style.transform='scale(1.06)'; }}
                  onMouseLeave={(e)=>e.currentTarget.style.transform='scale(1)'}>
                 <Arrow />
               </button>
