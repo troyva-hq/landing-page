@@ -10,9 +10,6 @@ export default async function handler(req, res) {
   const json = await r.json();
   if (!r.ok) return res.status(502).json({ error: 'upstream failed', detail: json });
 
-  console.log('formbricks response:', JSON.stringify(json, null, 2));
-
-  const count = json.data?._count?.responses ?? 0;
-  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
-  res.json({ count });
+  // DEBUG: return raw to find correct path
+  res.json({ raw: json });
 }
