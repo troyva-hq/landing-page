@@ -12,5 +12,5 @@ export default async function handler(req, res) {
 
   const count = json.meta?.total ?? 0;
   res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
-  res.json({ count });
+  res.json({ raw: json });
 }
