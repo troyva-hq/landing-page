@@ -7,6 +7,8 @@ import { submitEmail } from './formbricks'
 export default function Conversion({ tweaks, onSubmitSuccess }) {
   const ref = useReveal();
   const [email, setEmail] = React.useState('');
+  const [university, setUniversity] = React.useState('');
+  const [reference, setReference] = React.useState('');
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -14,14 +16,19 @@ export default function Conversion({ tweaks, onSubmitSuccess }) {
   const submit = async (e) => {
     e.preventDefault();
     const v = email.trim();
+    const u = university.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
       setError('Use your institutional email.');
+      return;
+    }
+    if (!u) {
+      setError('University name is required.');
       return;
     }
     setError('');
     setLoading(true);
     try {
-      await submitEmail(v);
+      await submitEmail(v, u, reference.trim() || undefined);
       setSubmitted(true);
       onSubmitSuccess?.();
     } catch {
@@ -88,6 +95,41 @@ export default function Conversion({ tweaks, onSubmitSuccess }) {
                  onMouseLeave={(e)=>e.currentTarget.style.transform='scale(1)'}>
                 <Arrow />
               </button>
+            </div>
+            {/* University name */}
+            <div className="liquid-glass" style={{
+              borderRadius: 999, padding: '8px 24px',
+              marginTop: 12,
+            }}>
+              <input
+                type="text"
+                required
+                placeholder="University name"
+                value={university}
+                onChange={(e) => setUniversity(e.target.value)}
+                style={{
+                  width: '100%', background: 'transparent', border: 0, outline: 'none',
+                  color: 'var(--cream)', fontFamily: 'var(--body)', fontSize: 15,
+                  padding: '10px 0',
+                }}
+              />
+            </div>
+            {/* Reference (optional) */}
+            <div className="liquid-glass" style={{
+              borderRadius: 999, padding: '8px 24px',
+              marginTop: 12,
+            }}>
+              <input
+                type="text"
+                placeholder="How did you hear about us? (optional)"
+                value={reference}
+                onChange={(e) => setReference(e.target.value)}
+                style={{
+                  width: '100%', background: 'transparent', border: 0, outline: 'none',
+                  color: 'var(--cream)', fontFamily: 'var(--body)', fontSize: 15,
+                  padding: '10px 0',
+                }}
+              />
             </div>
             <button type="submit" className="btn-glass" style={{
               marginTop: 18, padding: '14px 26px', justifyContent: 'center',

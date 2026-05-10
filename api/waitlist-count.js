@@ -3,7 +3,7 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'FORMBRICKS_API_KEY not set' });
 
   const r = await fetch(
-    'https://app.formbricks.com/api/v1/management/responses?surveyId=cmomkosjf60cbx1017ai6d0jl',
+    'https://app.formbricks.com/api/v1/management/responses?surveyId=cmozxh5bdr4jey501jeyvix7w',
     { headers: { 'x-api-key': apiKey } }
   );
 
